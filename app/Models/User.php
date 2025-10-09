@@ -42,4 +42,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function adresses(){ return $this->hasMany(Adresse::class); }
+    public function paniers(){ return $this->hasMany(Panier::class); }
+    public function commandes() { return $this->hasMany(Commande::class); }
+
+    // app/Models/Commande.php
+    public function avis()  // un seul avis par user/commande (grâce à la contrainte)
+    {
+        return $this->hasOne(Avis::class);
+    }
+
+
+
 }

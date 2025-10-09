@@ -13,13 +13,27 @@ class Puzzle extends Model
         'nom',
         'description',
         'image',
+        'stock',
         'prix',
-        'category_id', // ⚠️ clé étrangère vers categories.id
+        'categorie_id', 
     ];
+
+    public function getImageUrlAttribute(): string
+    {
+        $path = $this->image ?: '';
+        $path = str_replace('\\', '/', $path); // sécurité Windows
+        $path = ltrim($path, '/');             // évite // dans l’URL
+        return asset($path);
+    }
+
 
     public function categorie()
     {
-        // Relation vers Categorie (FR)
-        return $this->belongsTo(Categorie::class, 'category_id');
+        return $this->belongsTo(\App\Models\Categorie::class, 'categorie_id');
+    }
+    
+    public function lignes()
+    { 
+        return $this->hasMany(Appartient::class); 
     }
 }

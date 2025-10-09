@@ -9,7 +9,7 @@ class Categorie extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom'];
+    protected $fillable = ['nom','image'];
 
     protected $table = 'categories';
 
@@ -17,6 +17,6 @@ class Categorie extends Model
     {
         // ⚠️ Par défaut on suppose une FK 'category_id' dans 'puzzles'
         // Si ta colonne est différente, remplace 'category_id' par le bon nom.
-        return $this->hasMany(Puzzle::class, 'category_id');
+        return $this->hasMany(Puzzle::class, 'categorie_id');
     }
 }

@@ -11,9 +11,16 @@ class Adresse extends Model
     protected $fillable = [
         'numero',
         'rue',
-        'vill',
+        'ville',
         'code_postal',
         'pays',
+        'user_id',
+        'type'
     ];
+
+    public function user()
+    { 
+        return $this->belongsTo(User::class); 
+    }
 
 }

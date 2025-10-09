@@ -1,28 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold">Tableau de bord</h2>
+        <h2 class="font-semibold text-xl text-gray-800">Catégories</h2>
     </x-slot>
 
-    <div class="p-6">
-        <h3 class="text-lg font-semibold mb-4">Catégories</h3>
-
-        @isset($categories)
-            @if($categories->count())
-                <ul class="list-disc pl-6 space-y-1">
-                    @foreach($categories as $categorie)
-                        <li>
-                            <a class="text-indigo-600 underline"
-                               href="{{ route('categories.show', $categorie->id) }}">
-                                {{ $categorie->nom }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            @else
-                <p>Aucune catégorie trouvée.</p>
-            @endif
-        @else
-            <p>Pas de catégories chargées (vérifie la route /dashboard).</p>
-        @endisset
+    <div class="max-w-6xl mx-auto mt-6 grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        @foreach($categories as $cat)
+            <a href="{{ route('categories.show', $cat->id) }}"
+               class="bg-white rounded shadow p-4 hover:shadow-md transition">
+                <div class="font-semibold text-green-900">{{ $cat->nom }}</div>
+                <div class="text-sm text-green-800 mt-1">Voir les puzzles →</div>
+            </a>
+        @endforeach
     </div>
 </x-app-layout>

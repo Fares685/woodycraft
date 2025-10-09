@@ -9,15 +9,12 @@ return new class extends Migration {
     {
         Schema::create('puzzles', function (Blueprint $table) {
             $table->id();
-            $table->string('nom', 100)->unique();
-            $table->text('description');
-            $table->string('image');
-            $table->decimal('prix', 8, 2);
-
-            // Clé étrangère vers categories.id
-            $table->foreignId('category_id')
-                  ->constrained('categories')
-                  ->cascadeOnDelete();
+            $table->string('nom', 150);
+            $table->foreignId('categorie_id')->constrained('categories')->cascadeOnDelete();
+            $table->string('image')->nullable();
+            $table->decimal('prix', 10, 2);
+            $table->text('description')->nullable();
+            $table->integer('stock')->default(0);
 
             $table->timestamps();
         });
