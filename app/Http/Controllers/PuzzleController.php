@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Puzzle;
+use App\Models\Categorie;
 
 class PuzzleController extends Controller
 {
@@ -21,39 +22,36 @@ class PuzzleController extends Controller
      */
     public function create()
     {
-        return view('puzzles.create');
+        $categories = Categorie::all();
+        return view('puzzles.create', compact('categories'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'nom'         => 'required|max:100|unique:puzzles,nom',
-            'categorie'   => 'required|max:100',
-            'description' => 'required|max:500',
-            'image'       => 'required|max:100',
-            'prix'        => 'required|numeric|between:0,99.99',
-        ]);
+{
+    $data = $request->validate([
+        'nom'          => 'required|string|max:100|unique:puzzles,nom',
+        'categorie_id' => 'required|exists:categories,id',
+        'description'  => 'nullable|string|max:500',
+        'image'        => 'nullable|string|max:255',
+        'prix'         => 'required|numeric|min:0|max:999999.99',
+        'stock'        => 'required|integer|min:0',   // <--
+    ]);
 
-        $puzzle = new Puzzle();
-        $puzzle->nom = $request['nom'];
-        $puzzle->categorie = $request['categorie'];
-        $puzzle->description = $request['description'];
-        $puzzle->image = $request['image'];
-        $puzzle->prix = $request['prix'];
-        $puzzle->save();
-        return back()->with('message', 'Le puzzle a bien été créé !');
+    Puzzle::create($data);  // <--- enregistre aussi "stock"
 
-    }
+    return redirect()->route('puzzles.index')
+        ->with('message', 'Le puzzle a bien été créé !');
+}
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(\App\Models\Puzzle $puzzle)
     {
-        $puzzle = Puzzle::findOrFail($id);
+        $puzzle->load('categorie');   // <-- charge la relation
         return view('puzzles.show', compact('puzzle'));
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Adresse; 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdresseController extends Controller
 {
@@ -12,16 +13,19 @@ class AdresseController extends Controller
      */
     public function index()
     {
-        $adresses = Adresse::all();
+        $adresses = \App\Models\Adresse::where('user_id', Auth::id())
+            ->latest()->get();
+
         return view('adresses.index', compact('adresses'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('adresses.create');
+        $next = $request->query('next', route('commandes.create'));
+        return view('adresses.create', compact('next'));
     }
 
     /**
@@ -29,26 +33,26 @@ class AdresseController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'numero' => 'nullable|string|max:10',
-            'rue' => 'required|string|max:255',
-            'ville' => 'required|string|max:100',
-            'code_postal' => 'required|string|max:20',
-            'pays' => 'required|string|max:100',
+        $data = $request->validate([
+            'numero'      => ['required','string','max:50'],
+            'rue'         => ['required','string','max:255'],
+            'ville'       => ['required','string','max:255'],
+            'code_postal' => ['required','string','max:20'],
+            'pays'        => ['required','string','max:100'],
         ]);
 
-        Adresse::create($request->all());
+        $data['user_id'] = Auth::id();
 
-        return redirect()->route('adresses.index')
-                         ->with('success', 'Adresse ajoutée avec succès.');
-    }
+        $adresse = \App\Models\Adresse::create($data);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Adresse $adresse)
-    {
-        return view('adresses.show', compact('adresse'));
+        // S'il y a un "next" dans l'URL ou le formulaire, on y retourne
+        $next = $request->input('next');
+        if ($next && url()->previous()) {
+            return redirect($next)->with('success', 'Adresse enregistrée.');
+        }
+
+        // Sinon on va valider la commande
+        return redirect()->route('commandes.create')->with('success', 'Adresse enregistrée.');
     }
 
     /**

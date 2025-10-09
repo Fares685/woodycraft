@@ -25,10 +25,13 @@
 
             <!-- Catégorie -->
             <div class="mt-4">
-                <x-input-label for="categorie" :value="__('Categorie')" />
-                <x-text-input id="categorie" class="block mt-1 w-full"
-                              type="text" name="categorie" :value="old('categorie')" required />
-                <x-input-error :messages="$errors->get('categorie')" class="mt-2" />
+                <x-input-label for="categorie_id" :value="__('Catégorie')" />
+                <select id="categorie_id" name="categorie_id" class="block mt-1 w-full" required>
+                    @foreach($categories as $c)
+                        <option value="{{ $c->id }}">{{ $c->nom }}</option>
+                    @endforeach
+                </select>
+                <x-input-error :messages="$errors->get('categorie_id')" class="mt-2" />
             </div>
 
             <!-- Description -->
@@ -52,6 +55,14 @@
                 <x-text-input id="prix" class="block mt-1 w-full"
                               type="number" name="prix" :value="old('prix')" step="0.01" min="0" required />
                 <x-input-error :messages="$errors->get('prix')" class="mt-2" />
+            </div>
+
+            <!-- Stock -->
+            <div class="mt-4">
+                <x-input-label for="stock" :value="__('Stock')" />
+                <x-text-input id="stock" class="block mt-1 w-full"
+                              type="number" name="stock" :value="old('stock')" min="0" required />
+                <x-input-error :messages="$errors->get('stock')" class="mt-2" />
             </div>
 
             <div class="flex items-center justify-end mt-6">
