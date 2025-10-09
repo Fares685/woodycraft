@@ -1,66 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🧩 WoodyCraft
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+WoodyCraft est une application e-commerce Laravel permettant aux utilisateurs d’acheter des puzzles en bois artisanaux.  
+Ce projet inclut la gestion du panier, du passage de commande, la génération de facture PDF et un système d’avis client complet.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fonctionnalités principales
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🛒 Gestion du panier
+- Ajout, suppression et modification de produits dans le panier  
+- Calcul automatique du **montant total**  
+- Vérification du stock avant la validation  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🧾 Gestion des commandes
+- Enregistrement complet d’une commande avec :
+  - Détails des articles commandés
+  - Adresse de livraison et de facturation
+  - Mode de paiement (chèque, paypal, etc.)
+- Génération automatique d’une **facture PDF** téléchargeable  
+- Redirection sur le site **paypal** 
+- Page de confirmation de commande (“Merci pour votre commande”)
 
-## Learning Laravel
+### 🌟 Système d’avis clients
+- Chaque utilisateur peut **laisser un avis** sur sa commande après réception  
+- Un seul avis est autorisé par commande (prévention des doublons)
+- Affichage de la **note sur 5** et du commentaire sur la page commande  
+- Enregistrement en base dans la table `avis` liée à la commande et à l’utilisateur
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 👤 Authentification
+- Accès sécurisé grâce à **Laravel Breeze / Jetstream**
+- L’utilisateur doit être connecté pour consulter ou créer un avis
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🧠 Interface claire
+- Design sobre et responsive grâce à **TailwindCSS**
+- Pages :
+  - `Accueil` — présentation des produits
+  - `Catégories` — navigation par type de puzzle
+  - `Panier` — résumé et validation
+  - `Commandes` — historique et détail
+  - `Avis` — ajout / affichage d’un avis client
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## ⚙️ Structure du projet
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```
+app/
+ ├── Http/
+ │    ├── Controllers/
+ │    │    ├── CommandeController.php
+ │    │    ├── PanierController.php
+ │    │    ├── AvisController.php   ← Gestion des avis clients
+ │    │
+ │    └── Middleware/
+ │         └── EnsureUserHasAddress.php
+ │
+ ├── Models/
+ │    ├── Commande.php              ← Relation avec Avis et Lignes de commande
+ │    ├── Avis.php                  ← Note + Commentaire + User + Commande
+ │    ├── Puzzle.php
+ │    ├── LigneCommande.php
+ │
+ └── Policies/
+      └── CommandePolicy.php        ← Protection d’accès par utilisateur
 
-### Premium Partners
+resources/
+ ├── views/
+ │    ├── commandes/
+ │    │     ├── show.blade.php     ← Détail d’une commande + bloc d’avis
+ │    │     ├── facture.blade.php  ← Génération PDF
+ │    │     └── merci.blade.php
+ │    ├── avis/
+ │    │     └── create.blade.php   ← Formulaire de création d’avis
+ │    └── layouts/
+ │          └── app.blade.php
+ │
+routes/
+ ├── web.php                        ← Routes principales (commandes, avis, panier)
+ │
+database/
+ ├── migrations/
+ │     └── 2025_10_09_145854_create_avis_table.php ← Table des avis
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## 🗃️ Base de données
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Table `avis`
+| Colonne        | Type        | Description                              |
+|----------------|-------------|------------------------------------------|
+| id             | int         | Identifiant unique                      |
+| user_id        | int         | Utilisateur ayant laissé l’avis         |
+| commande_id    | int         | Commande associée                       |
+| note           | tinyint     | Note sur 5                              |
+| commentaire    | text (null) | Avis facultatif                         |
+| created_at     | datetime    | Date de création                        |
+| updated_at     | datetime    | Dernière mise à jour                    |
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🧑‍💻 Déploiement GitHub
 
-## Security Vulnerabilities
+- Branche principale : `main`  
+- Branche de développement : `feat/panier-commande`  
+- Pull Request effectuée pour fusionner les modifications sur `main`  
+- Authentification via GitHub CLI (`gh auth login`)  
+- Commandes Git utilisées :
+  ```bash
+  git add .
+  git commit -m "Ajout du système d'avis + corrections panier/commande"
+  git push origin feat/panier-commande
+  ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 📦 Technologies utilisées
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Laravel 11**
+- **Blade / TailwindCSS**
+- **MySQL**
+- **Laravel DOMPDF** (factures PDF)
+- **Git / GitHub**
+- **Laragon** (serveur local)
+
+---
+
+## 🧑‍🔧 Auteur
+
+**SAIF Fares**  
+Projet réalisé dans le cadre du BTS SIO — Développement d’un site e-commerce Laravel complet avec gestion d’avis client.
