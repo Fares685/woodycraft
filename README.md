@@ -1,132 +1,205 @@
 # 🧩 WoodyCraft
 
-WoodyCraft est une application e-commerce Laravel permettant aux utilisateurs d’acheter des puzzles en bois artisanaux.  
-Ce projet inclut la gestion du panier, du passage de commande, la génération de facture PDF et un système d’avis client complet.
+**WoodyCraft** est une application e-commerce complète développée avec **Laravel**, permettant la vente de puzzles en bois artisanaux.  
+Le site propose un parcours utilisateur complet : navigation dans les catégories, ajout au panier, validation de commande, paiement, génération de facture PDF et système d’avis client.
 
 ---
 
 ## 🚀 Fonctionnalités principales
 
-### 🛒 Gestion du panier
-- Ajout, suppression et modification de produits dans le panier  
-- Calcul automatique du **montant total**  
-- Vérification du stock avant la validation  
+### 🏠 Page d’accueil
+- Présentation des produits et catégories (Animaux, Architecture, Véhicules, etc.)
+- Interface épurée et responsive avec **TailwindCSS**
+- Navigation fluide et intuitive
+
+### 🛍️ Gestion du panier
+- Ajout, modification et suppression d’articles
+- Calcul automatique du sous-total et du total
+- Vérification du stock avant validation
+- Sauvegarde du panier liée à l’utilisateur connecté
 
 ### 🧾 Gestion des commandes
-- Enregistrement complet d’une commande avec :
-  - Détails des articles commandés
-  - Adresse de livraison et de facturation
-  - Mode de paiement (chèque, paypal, etc.)
-- Génération automatique d’une **facture PDF** téléchargeable  
-- Redirection sur le site **paypal** 
-- Page de confirmation de commande (“Merci pour votre commande”)
+- Création d’une commande complète :
+  - Liste des produits
+  - Adresses de facturation et de livraison
+  - Méthode de paiement (ex. : chèque)
+- Génération automatique d’une **facture PDF téléchargeable**
+- Page de confirmation “Merci pour votre commande”
 
-### 🌟 Système d’avis clients
-- Chaque utilisateur peut **laisser un avis** sur sa commande après réception  
-- Un seul avis est autorisé par commande (prévention des doublons)
-- Affichage de la **note sur 5** et du commentaire sur la page commande  
-- Enregistrement en base dans la table `avis` liée à la commande et à l’utilisateur
+### ⭐ Gestion des avis clients
+- Chaque client peut laisser **un seul avis** par commande
+- Enregistrement de la **note (sur 5)** et d’un commentaire optionnel
+- Affichage direct de l’avis sur la page commande
+- Prévention des doublons (un avis par utilisateur et par commande)
 
 ### 👤 Authentification
-- Accès sécurisé grâce à **Laravel Breeze / Jetstream**
-- L’utilisateur doit être connecté pour consulter ou créer un avis
-
-### 🧠 Interface claire
-- Design sobre et responsive grâce à **TailwindCSS**
-- Pages :
-  - `Accueil` — présentation des produits
-  - `Catégories` — navigation par type de puzzle
-  - `Panier` — résumé et validation
-  - `Commandes` — historique et détail
-  - `Avis` — ajout / affichage d’un avis client
+- Gestion des utilisateurs via **Laravel Breeze / Jetstream**
+- Accès restreint aux fonctionnalités (commandes, avis, etc.)
+- Affichage personnalisé selon le profil connecté
 
 ---
 
-## ⚙️ Structure du projet
+## 🧠 Structure du projet
 
 ```
 app/
  ├── Http/
  │    ├── Controllers/
- │    │    ├── CommandeController.php
+ │    │    ├── HomeController.php
  │    │    ├── PanierController.php
- │    │    ├── AvisController.php   ← Gestion des avis clients
+ │    │    ├── CommandeController.php
+ │    │    ├── AvisController.php
  │    │
  │    └── Middleware/
  │         └── EnsureUserHasAddress.php
  │
  ├── Models/
- │    ├── Commande.php              ← Relation avec Avis et Lignes de commande
- │    ├── Avis.php                  ← Note + Commentaire + User + Commande
  │    ├── Puzzle.php
+ │    ├── Commande.php
  │    ├── LigneCommande.php
+ │    ├── Adresse.php
+ │    └── Avis.php
  │
  └── Policies/
-      └── CommandePolicy.php        ← Protection d’accès par utilisateur
+      └── CommandePolicy.php
 
 resources/
  ├── views/
- │    ├── commandes/
- │    │     ├── show.blade.php     ← Détail d’une commande + bloc d’avis
- │    │     ├── facture.blade.php  ← Génération PDF
- │    │     └── merci.blade.php
- │    ├── avis/
- │    │     └── create.blade.php   ← Formulaire de création d’avis
- │    └── layouts/
- │          └── app.blade.php
+ │    ├── home/                  → Page d’accueil
+ │    ├── categories/            → Affichage par catégorie
+ │    ├── panier/                → Gestion du panier
+ │    ├── commandes/             → Commandes & factures
+ │    ├── avis/                  → Ajout / affichage des avis
+ │    └── layouts/               → Structure globale (app.blade.php)
  │
 routes/
- ├── web.php                        ← Routes principales (commandes, avis, panier)
+ ├── web.php                     → Définition des routes principales
  │
 database/
  ├── migrations/
- │     └── 2025_10_09_145854_create_avis_table.php ← Table des avis
+ │    ├── create_commandes_table.php
+ │    ├── create_lignes_commandes_table.php
+ │    ├── create_avis_table.php
+ │    └── autres migrations...
 ```
 
 ---
 
-## 🗃️ Base de données
+## 🗃️ Base de données principale
+
+### Table `puzzles`
+| Colonne | Type | Description |
+|----------|------|-------------|
+| id | int | Identifiant |
+| nom | string | Nom du puzzle |
+| prix | decimal | Prix unitaire |
+| categorie_id | int | Catégorie du puzzle |
+
+### Table `commandes`
+| Colonne | Type | Description |
+|----------|------|-------------|
+| id | int | Identifiant |
+| user_id | int | Utilisateur associé |
+| montant_total | decimal | Total de la commande |
+| mode_paiement | string | Mode de paiement |
+| created_at | datetime | Date de commande |
 
 ### Table `avis`
-| Colonne        | Type        | Description                              |
-|----------------|-------------|------------------------------------------|
-| id             | int         | Identifiant unique                      |
-| user_id        | int         | Utilisateur ayant laissé l’avis         |
-| commande_id    | int         | Commande associée                       |
-| note           | tinyint     | Note sur 5                              |
-| commentaire    | text (null) | Avis facultatif                         |
-| created_at     | datetime    | Date de création                        |
-| updated_at     | datetime    | Dernière mise à jour                    |
+| Colonne | Type | Description |
+|----------|------|-------------|
+| id | int | Identifiant |
+| user_id | int | Auteur de l’avis |
+| commande_id | int | Commande concernée |
+| note | tinyint | Note sur 5 |
+| commentaire | text | Commentaire optionnel |
 
 ---
 
-## 🧑‍💻 Déploiement GitHub
+## ⚙️ Installation du projet
 
-- Branche principale : `main`  
-- Branche de développement : `feat/panier-commande`  
-- Pull Request effectuée pour fusionner les modifications sur `main`  
-- Authentification via GitHub CLI (`gh auth login`)  
-- Commandes Git utilisées :
-  ```bash
-  git add .
-  git commit -m "Ajout du système d'avis + corrections panier/commande"
-  git push origin feat/panier-commande
-  ```
+### 1️⃣ Cloner le dépôt
+```bash
+git clone https://github.com/Fares685/woodycraft.git
+cd woodycraft
+```
+
+### 2️⃣ Installer les dépendances
+```bash
+composer install
+npm install
+```
+
+### 3️⃣ Configurer l’environnement
+Crée ton fichier `.env` :
+```bash
+cp .env.example .env
+```
+Puis configure :
+- Base de données MySQL (via Laragon)
+- Nom du projet (`APP_NAME=WoodyCraft`)
+- Autres variables Laravel
+
+### 4️⃣ Générer la clé d’application
+```bash
+php artisan key:generate
+```
+
+### 5️⃣ Exécuter les migrations et les seeders
+```bash
+php artisan migrate --seed
+```
+
+### 6️⃣ Lancer le serveur local
+```bash
+php artisan serve
+```
+
+👉 Accède ensuite à **http://localhost:8000**
 
 ---
 
 ## 📦 Technologies utilisées
 
-- **Laravel 11**
-- **Blade / TailwindCSS**
-- **MySQL**
-- **Laravel DOMPDF** (factures PDF)
-- **Git / GitHub**
-- **Laragon** (serveur local)
+| Outil | Utilisation |
+|--------|--------------|
+| **Laravel 11** | Framework backend principal |
+| **Blade + TailwindCSS** | Front-end responsive |
+| **MySQL** | Base de données |
+| **Laravel DOMPDF** | Génération de factures PDF |
+| **Git / GitHub** | Versionning et collaboration |
+| **Laragon** | Environnement local de développement |
 
 ---
 
-## 🧑‍🔧 Auteur
+## 🧑‍💻 Commandes Git utilisées
 
-**SAIF Fares**  
-Projet réalisé dans le cadre du BTS SIO — Développement d’un site e-commerce Laravel complet avec gestion d’avis client.
+```bash
+# Ajouter les fichiers
+git add .
+
+# Commit des modifications
+git commit -m "Ajout du système d'avis + corrections panier/commande"
+
+# Pousser sur une branche de feature
+git push origin feat/panier-commande
+
+# Fusion dans main via pull request
+git checkout main
+git pull origin main
+git merge feat/panier-commande
+git push origin main
+```
+
+---
+
+## 💡 Auteur
+
+👤 **SAIF Fares**  
+Projet réalisé dans le cadre du **BTS SIO (SLAM)**.  
+Objectif : concevoir une application e-commerce complète avec Laravel, incluant la gestion du panier, des commandes, des factures et des avis clients.
+
+---
+
+## 🧾 Licence
+
+Ce projet est open-source et distribué sous licence **MIT**.
