@@ -236,6 +236,9 @@ php artisan serve
 # Créer migration Avis (exemple)
 php artisan make:migration create_avis_table
 
+# Créer Controlleur Avis (exemple)
+php artisan make:controller AvisController -resource
+
 # Rafraîchir la base
 php artisan migrate:fresh --seed
 ```
@@ -248,17 +251,3 @@ php artisan migrate:fresh --seed
 - **app/Http/Controllers** : `CategorieController`, `PuzzleController`, `PanierController`, `CommandeController`, `AdresseController`, `AvisController`, `PaypalController`, `HomeController`
 - **resources/views** : `categories`, `puzzles`, `panier`, `commandes` (`index`, `create`, `show`, `facture`, `merci`), `avis` (`create`), `layouts`
 
----
-
-## 🛠️ Roadmap (idées)
-
-- Paiement PayPal/Stripe **réel**
-- Notation/avis par **produit**
-- Codes promo / transport / TVA
-- Admin CRUD (produits, catégories, commandes, avis)
-
----
-
-## 📄 Licence
-
-Projet pédagogique — usage libre pour l’apprentissage.
