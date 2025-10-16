@@ -3,6 +3,8 @@
 
 Application e‑commerce (Laravel 10) pour la vente de puzzles en bois : navigation par catégories, fiches produit, panier, passage de commande (chèque / stub PayPal), facture PDF et **avis sur commande**.
 
+---
+
 ## Objectif
 
 Créer un site e-commerce fonctionnel pour la société woodycraft, offrant une expérience complète pour naviguer dans les puzzles, gérer le panier et effectuer des paiements sécurisés.
