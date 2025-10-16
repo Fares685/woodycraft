@@ -181,25 +181,14 @@ Application e‑commerce (Laravel 10) pour la vente de puzzles en bois : navigat
 ## 📦 Installation & lancement
 
 ```bash
-git clone https://github.com/Fares685/woodycraft.git
-cd woodycraft
-
-# Dépendances
-composer install
-cp .env.example .env
-php artisan key:generate
-
-# Configurer .env (DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD)
-php artisan migrate
-
-# Lier le storage pour les images produits
-php artisan storage:link
-
-# Lancer le serveur
-php artisan serve
-```
-
-> Si vous utilisez Laragon, placez le dossier dans `C:\laragon\www\` puis accédez via `http://woodycraft.test` (ou `http://localhost/...`).
+cd /c/laragon/www/woodycraft
+ls
+git init
+git branch -M main
+git remote add origin https://github.com/<Fares685>/woodycraft.git
+git add .
+git commit -m "Initial commit: projet Laravel"
+git push -u origin main
 
 ---
 
@@ -233,6 +222,10 @@ php artisan serve
 ## 🔧 Commandes utiles
 
 ```bash
+
+# Créer Modèle Avis (exemple)
+php artisan make:model Avis -m
+
 # Créer migration Avis (exemple)
 php artisan make:migration create_avis_table
 
